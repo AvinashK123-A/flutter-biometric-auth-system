@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key>
+    <string>Biometric Auth</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>flutter_biometric_auth_system</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(FLUTTER_BUILD_NAME)</string>
+    <key>CFBundleVersion</key>
+    <string>$(FLUTTER_BUILD_NUMBER)</string>
+
+    <!-- ==================== APP TRANSPORT SECURITY ==================== -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+    </dict>
+
+    <!-- ==================== BIOMETRIC PERMISSIONS ==================== -->
+    <!-- CRITICAL: Face ID requires this key — missing it causes crash -->
+    <key>NSFaceIDUsageDescription</key>
+    <string>Biometric Auth uses Face ID to securely authenticate your identity and protect your data. Your biometric data never leaves your device.</string>
+
+    <!-- Touch ID (handled by LocalAuthentication framework — no separate key needed) -->
+    <!-- But providing clear messaging is good practice -->
+
+    <!-- ==================== OTHER PERMISSIONS ==================== -->
+    <key>NSCameraUsageDescription</key>
+    <string>Biometric Auth uses camera for document scanning and identity verification.</string>
+
+    <key>NSUserNotificationsUsageDescription</key>
+    <string>Biometric Auth sends security alerts for login attempts and session expiry.</string>
+
+    <!-- ==================== BACKGROUND MODES ==================== -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+        <string>processing</string>
+    </array>
+
+    <!-- ==================== URL SCHEMES ==================== -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <!-- OTP/Magic link auth scheme -->
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.avinash.biometric.auth</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>biometricauth</string>
+            </array>
+        </dict>
+        <!-- Google Sign-In -->
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>REVERSED_CLIENT_ID</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.YOUR_REVERSED_CLIENT_ID</string>
+            </array>
+        </dict>
+    </array>
+
+    <!-- Associated domains for magic link auth -->
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:biometricauth.com</string>
+    </array>
+
+    <!-- Prevent screenshot capture (security) -->
+    <!-- Note: Flutter prevents screenshots via FLAG_SECURE — configured in MainActivity -->
+
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+
+    <!-- Lock to portrait (security apps typically portrait-only) -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
+
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+
+    <!-- Session timeout in seconds (read by app) -->
+    <key>SESSION_TIMEOUT_SECONDS</key>
+    <string>$(SESSION_TIMEOUT_SECONDS)</string>
+    <key>MAX_AUTH_ATTEMPTS</key>
+    <string>$(MAX_AUTH_ATTEMPTS)</string>
+    <key>ENVIRONMENT</key>
+    <string>$(ENVIRONMENT)</string>
+    <key>API_BASE_URL</key>
+    <string>$(API_BASE_URL)</string>
+
+    <!-- ==================== PRIVACY MANIFEST (iOS 17+) ==================== -->
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>
