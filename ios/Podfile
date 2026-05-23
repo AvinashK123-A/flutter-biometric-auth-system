@@ -1,0 +1,73 @@
+# Podfile — flutter-biometric-auth-system
+platform :ios, '14.0'
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist."
+  end
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # ==================== FIREBASE ====================
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Messaging'
+  pod 'Firebase/Crashlytics'
+
+  # ==================== BIOMETRIC (via LocalAuthentication framework) ====================
+  # LocalAuthentication is a system framework — no CocoaPod needed.
+  # The local_auth Flutter plugin handles the integration.
+  # flutter_secure_storage uses Keychain services natively.
+
+  # ==================== SECURITY ====================
+  pod 'SQLCipher', '~> 4.5'
+  pod 'CryptoSwift', '~> 1.8'
+  pod 'KeychainAccess', '~> 4.2'
+
+  # ==================== JWT ====================
+  pod 'JWTDecode', '~> 3.1'
+
+  # ==================== NETWORKING ====================
+  pod 'Alamofire', '~> 5.8'
+  pod 'CertificatePinning'
+
+  # ==================== UI ====================
+  pod 'lottie-ios', '~> 4.3'
+  pod 'IQKeyboardManagerSwift', '~> 6.5'
+
+  # ==================== DEVICE SECURITY CHECKS ====================
+  pod 'IOSSecuritySuite', '~> 1.9'
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      config.build_settings['SWIFT_VERSION'] = '5.9'
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+      config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO' if ENV['CI']
+      # Enable secure enclave usage for Keychain
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'COCOAPODS=1']
+    end
+  end
+end
